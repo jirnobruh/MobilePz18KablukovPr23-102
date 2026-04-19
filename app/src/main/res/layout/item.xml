@@ -6,23 +6,27 @@
     android:padding="8dp"
     android:gravity="center_vertical">
 
+    <!-- 1. Поле с флажком -->
     <CheckBox
         android:id="@+id/cbChecked"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:focusable="false" />
 
+    <!-- 2. Текстовое поле -->
     <TextView
         android:id="@+id/tvText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="18sp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"/>
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textSize="18sp" />
 
+    <!-- 3. Картинка -->
     <ImageView
         android:id="@+id/ivImg"
-        android:layout_width="48dp"
-        android:layout_height="48dp" />
-
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/ic_launcher" />
 </LinearLayout>
