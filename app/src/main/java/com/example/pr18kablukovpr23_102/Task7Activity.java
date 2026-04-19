@@ -1,11 +1,11 @@
 package com.example.pr18kablukovpr23_102;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -44,9 +44,10 @@ public class Task7Activity extends AppCompatActivity {
         elvMain.setAdapter(sctAdapter);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-        findViewById(R.id.btnFinish).setOnClickListener(v -> 
-            Toast.makeText(this, "Поздравляем! Вы прошли все 7 заданий.", Toast.LENGTH_LONG).show()
-        );
+        findViewById(R.id.btnFinish).setOnClickListener(v -> {
+            Intent intent = new Intent(this, Task8Activity.class);
+            startActivity(intent);
+        });
     }
 
     @Override
