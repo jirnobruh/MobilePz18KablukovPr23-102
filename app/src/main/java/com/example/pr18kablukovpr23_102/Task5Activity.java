@@ -1,5 +1,6 @@
 package com.example.pr18kablukovpr23_102;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -44,15 +45,12 @@ public class Task5Activity extends AppCompatActivity {
         String[] from = {ATTR_NAME_TEXT, ATTR_NAME_IMAGE};
         int[] to = {R.id.tvText, R.id.ivImg};
 
-        // Используем твой стандартный item.xml (в котором мы уже поправили цвета и порядок)
         sAdapter = new SimpleAdapter(this, data, R.layout.item, from, to);
         lvSimple = findViewById(R.id.lvSimple);
         lvSimple.setAdapter(sAdapter);
 
-        // Регистрация контекстного меню для удаления
         registerForContextMenu(lvSimple);
 
-        // Обработчик добавления
         findViewById(R.id.btnAdd).setOnClickListener(v -> {
             Map<String, Object> m = new HashMap<>();
             m.put(ATTR_NAME_TEXT, "Новая запись " + (data.size() + 1));
@@ -63,27 +61,23 @@ public class Task5Activity extends AppCompatActivity {
         });
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-        findViewById(R.id.btnFinish).setOnClickListener(v -> 
-            Toast.makeText(this, "Все задания выполнены!", Toast.LENGTH_LONG).show()
-        );
+        findViewById(R.id.btnNext).setOnClickListener(v -> {
+            Intent intent = new Intent(this, Task6Activity.class);
+            startActivity(intent);
+        });
     }
 
-    // Создание контекстного меню
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.add(0, CM_DELETE_ID, 0, "Удалить запись");
     }
 
-    // Обработка удаления
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == CM_DELETE_ID) {
-            // Получаем инфо о пункте списка
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            // Удаляем из данных
             data.remove(acmi.position);
-            // Уведомляем адаптер
             sAdapter.notifyDataSetChanged();
             Toast.makeText(this, "Удалено", Toast.LENGTH_SHORT).show();
             return true;

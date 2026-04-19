@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pr18KablukovPr23102">
         <activity
+            android:name=".Task7Activity"
+            android:exported="false" />
+        <activity
+            android:name=".Task6Activity"
+            android:exported="false" />
+        <activity
             android:name=".Task5Activity"
             android:exported="false" />
         <activity
