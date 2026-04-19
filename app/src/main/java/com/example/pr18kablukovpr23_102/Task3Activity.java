@@ -1,6 +1,7 @@
 package com.example.pr18kablukovpr23_102;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -48,20 +48,19 @@ public class Task3Activity extends AppCompatActivity {
             data.add(map);
         }
 
-        // Мы связываем данные с View. 
-        // Обрати внимание: мы свяжем и текст, и значение с одним и тем же TextView (R.id.tvText),
-        // но в переопределенном методе setViewText решим, как это отобразить.
+        // Связываем ключи с ID из item_task3.xml
         String[] from = {ATTR_NAME_TEXT, ATTR_NAME_VALUE, ATTR_NAME_IMAGE};
-        int[] to = {R.id.tvText, R.id.tvText, R.id.ivImg};
+        int[] to = {R.id.tvText, R.id.tvValue, R.id.ivImg};
 
-        MySimpleAdapter sAdapter = new MySimpleAdapter(this, data, R.layout.item, from, to);
+        MySimpleAdapter sAdapter = new MySimpleAdapter(this, data, R.layout.item_task3, from, to);
         ListView lvSimple = findViewById(R.id.lvSimple);
         lvSimple.setAdapter(sAdapter);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-        findViewById(R.id.btnNext).setOnClickListener(v -> 
-                Toast.makeText(this, "Вы выполнили все задания!", Toast.LENGTH_SHORT).show()
-        );
+        findViewById(R.id.btnNext).setOnClickListener(v -> {
+            Intent intent = new Intent(this, Task4Activity.class);
+            startActivity(intent);
+        });
     }
 
     class MySimpleAdapter extends SimpleAdapter {
@@ -71,25 +70,22 @@ public class Task3Activity extends AppCompatActivity {
 
         @Override
         public void setViewText(TextView v, String text) {
+            // Стандартная установка текста
             super.setViewText(v, text);
             
-            // Если это TextView для основного текста
-            if (v.getId() == R.id.tvText) {
+            // Если это поле со значением цены (tvValue)
+            if (v.getId() == R.id.tvValue) {
                 try {
-                    // Пытаемся понять, число это или текст
                     int val = Integer.parseInt(text);
                     if (val < 0) {
-                        v.setTextColor(Color.RED); // Отрицательные значения красным
+                        v.setTextColor(Color.RED);
                     } else if (val > 0) {
-                        v.setTextColor(Color.GREEN); // Положительные зеленым
+                        v.setTextColor(Color.GREEN);
                     } else {
-                        v.setTextColor(Color.GRAY); // Ноль серым
+                        v.setTextColor(Color.GRAY);
                     }
-                    // Добавим префикс для наглядности
-                    v.setText("Цена: " + text);
                 } catch (NumberFormatException e) {
-                    // Если это не число (т.е. название фрукта), сбрасываем цвет в стандартный
-                    v.setTextColor(Color.BLACK);
+                    // Игнорируем, если не число
                 }
             }
         }
@@ -97,7 +93,6 @@ public class Task3Activity extends AppCompatActivity {
         @Override
         public void setViewImage(ImageView v, String value) {
             super.setViewImage(v, value);
-            // Логика из урока: если иконка "delete", меняем её прозрачность
             if (value.equals(String.valueOf(android.R.drawable.ic_menu_delete))) {
                 v.setAlpha(0.5f);
             } else {
