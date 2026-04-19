@@ -12,17 +12,25 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="16dp"
-        android:text="Задание 4 (ViewBinder)"
-        android:textSize="24sp"
+        android:text="Задание 5 (Добавление/Удаление)"
+        android:textSize="20sp"
         android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTitle"
+        android:text="Добавить запись"
+        android:layout_marginBottom="8dp"/>
 
     <ListView
         android:id="@+id/lvSimple"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/btnAdd"
         android:layout_above="@+id/navigationButtons"
-        android:layout_below="@id/tvTitle"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"/>
 
     <LinearLayout
         android:id="@+id/navigationButtons"
@@ -39,10 +47,10 @@
             android:text="Назад" />
 
         <Button
-            android:id="@+id/btnNext"
+            android:id="@+id/btnFinish"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Далее" />
+            android:text="Завершить" />
     </LinearLayout>
 </RelativeLayout>
