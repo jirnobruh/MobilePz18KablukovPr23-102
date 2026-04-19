@@ -9,22 +9,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DB {
 
     private static final String DB_NAME = "mydb";
-    private static final int DB_VERSION = 2; // Увеличили версию для добавления новых таблиц
-    
-    // Данные для Task 6
+    private static final int DB_VERSION = 3;
+
     private static final String DB_TABLE = "mytab";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_IMG = "img";
     public static final String COLUMN_TXT = "txt";
 
-    private static final String DB_CREATE =
-            "create table " + DB_TABLE + "(" +
-                    COLUMN_ID + " integer primary key autoincrement, " +
-                    COLUMN_IMG + " integer, " +
-                    COLUMN_TXT + " text" +
-                    ");";
-
-    // Данные для Task 7 (Lesson 53)
     public static final String COMPANY_TABLE = "company";
     public static final String COMPANY_ID = "_id";
     public static final String COMPANY_NAME = "name";
@@ -33,6 +24,13 @@ public class DB {
     public static final String PHONE_ID = "_id";
     public static final String PHONE_COMPANY = "company";
     public static final String PHONE_NAME = "name";
+
+    private static final String DB_CREATE =
+            "create table " + DB_TABLE + "(" +
+                    COLUMN_ID + " integer primary key autoincrement, " +
+                    COLUMN_IMG + " integer, " +
+                    COLUMN_TXT + " text" +
+                    ");";
 
     private static final String COMPANY_CREATE = "create table " + COMPANY_TABLE + "("
             + COMPANY_ID + " integer primary key, "
@@ -60,7 +58,6 @@ public class DB {
         if (mDBHelper != null) mDBHelper.close();
     }
 
-    // Методы для Task 6
     public Cursor getAllData() {
         return mDB.query(DB_TABLE, null, null, null, null, null, null);
     }
@@ -69,7 +66,6 @@ public class DB {
         mDB.delete(DB_TABLE, COLUMN_ID + " = " + id, null);
     }
 
-    // Методы для Task 7
     public Cursor getCompanyData() {
         return mDB.query(COMPANY_TABLE, null, null, null, null, null, null);
     }
@@ -89,16 +85,18 @@ public class DB {
             db.execSQL(DB_CREATE);
             db.execSQL(COMPANY_CREATE);
             db.execSQL(PHONE_CREATE);
+            fillInitialData(db);
+        }
 
-            // Данные для Task 6
+        private void fillInitialData(SQLiteDatabase db) {
             ContentValues cv = new ContentValues();
             for (int i = 1; i < 5; i++) {
-                cv.put(COLUMN_TXT, "sometext " + i);
+                cv.clear();
+                cv.put(COLUMN_TXT, "Запись из БД " + i);
                 cv.put(COLUMN_IMG, android.R.drawable.ic_menu_report_image);
                 db.insert(DB_TABLE, null, cv);
             }
 
-            // Данные для Task 7
             String[] companies = { "Samsung", "HTC", "LG" };
             for (int i = 0; i < companies.length; i++) {
                 cv.clear();
@@ -107,25 +105,16 @@ public class DB {
                 db.insert(COMPANY_TABLE, null, cv);
             }
 
-            String[] phonesSamsung = { "Galaxy S II", "Galaxy Nexus", "Galaxy Note" };
-            String[] phonesHTC = { "Sensation", "Desire HD", "Wildfire S", "Hero" };
-            String[] phonesLG = { "Optimus", "Optimus 2X", "Optimus Black" };
+            insertPhones(db, 1, new String[]{"Galaxy S II", "Galaxy Nexus", "Galaxy Note"});
+            insertPhones(db, 2, new String[]{"Sensation", "Desire HD", "Wildfire S", "Hero"});
+            insertPhones(db, 3, new String[]{"Optimus", "Optimus 2X", "Optimus Black"});
+        }
 
-            for (String s : phonesSamsung) {
+        private void insertPhones(SQLiteDatabase db, int companyId, String[] phones) {
+            ContentValues cv = new ContentValues();
+            for (String s : phones) {
                 cv.clear();
-                cv.put(PHONE_COMPANY, 1);
-                cv.put(PHONE_NAME, s);
-                db.insert(PHONE_TABLE, null, cv);
-            }
-            for (String s : phonesHTC) {
-                cv.clear();
-                cv.put(PHONE_COMPANY, 2);
-                cv.put(PHONE_NAME, s);
-                db.insert(PHONE_TABLE, null, cv);
-            }
-            for (String s : phonesLG) {
-                cv.clear();
-                cv.put(PHONE_COMPANY, 3);
+                cv.put(PHONE_COMPANY, companyId);
                 cv.put(PHONE_NAME, s);
                 db.insert(PHONE_TABLE, null, cv);
             }
@@ -133,20 +122,10 @@ public class DB {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            if (oldVersion == 1 && newVersion == 2) {
-                db.execSQL(COMPANY_CREATE);
-                db.execSQL(PHONE_CREATE);
-                // Заполнение можно вынести в отдельный метод, но для краткости добавим здесь
-                ContentValues cv = new ContentValues();
-                String[] companies = { "Samsung", "HTC", "LG" };
-                for (int i = 0; i < companies.length; i++) {
-                    cv.clear();
-                    cv.put(COMPANY_ID, i + 1);
-                    cv.put(COMPANY_NAME, companies[i]);
-                    db.insert(COMPANY_TABLE, null, cv);
-                }
-                // ... и так далее для телефонов
-            }
+            db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + COMPANY_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + PHONE_TABLE);
+            onCreate(db);
         }
     }
 }
